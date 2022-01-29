@@ -91,4 +91,10 @@ extension PhotoViewModel {
     var isfamily: Int {
         return self.photo.isfamily ?? 0
     }
+    
+    var photoUrl: String {
+        return "https://farm\(farm).static.flickr.com/\(server)/\(id)_\(secret).jpg"
+    }
 }
+
+  

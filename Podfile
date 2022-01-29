@@ -6,6 +6,7 @@ target 'MyFlickr' do
   use_frameworks!
 
   # Pods for MyFlickr
+  pod 'lottie-ios'
   pod 'Kingfisher', '~> 7.0'
 
   target 'MyFlickrTests' do
