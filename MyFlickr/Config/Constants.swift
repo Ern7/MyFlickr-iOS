@@ -15,7 +15,7 @@ struct Constants {
     }
 
     struct ApiKeys {
-        static let FlickrApiKey = "86c3624c7983deaacdd66a7ddc874b80";
+        static let FlickrApiKey = "";
     }
     
     struct Font {
