@@ -31,5 +31,8 @@ struct Constants {
         static let invisibleGrey = "#C1D2D8"
         static let pageBackgroundGrey = "#F8F8F8"
     }
-
+    
+    struct UserDefaultsKeys {
+        static let SearchHistoryItems = "SearchHistoryItems";
+    }
 }

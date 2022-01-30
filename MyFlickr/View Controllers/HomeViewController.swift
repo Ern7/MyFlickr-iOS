@@ -21,41 +21,52 @@ class HomeViewController : UIViewController, UICollectionViewDelegate, UICollect
     @IBOutlet weak var errorAnimationView: AnimationView!
     @IBOutlet weak var activityIndicatorView: UIActivityIndicatorView!
     
+    var isSearchResultsMode = false
+    
     //collectionView configs
     let inset: CGFloat = 10
     let minimumLineSpacing: CGFloat = 10
     let minimumInteritemSpacing: CGFloat = 10
     let cellsPerRow = 2
 
-    //ViewModel
-    private var photoListVM = PhotoListViewModel(photos: [Photo]())
-  //  private var photoListVM: PhotoListViewModel!
-    
     //DATA
     var currentPage = 1
     var pageSize = 20
     var searchText = ""
     
+    //ViewModel
+    var photoListVM = PhotoListViewModel(photos: [Photo]())
+    
     //OBSERVERS
     var observers: [AnyCancellable] = []
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        //Navigation Controller
-        self.navigationController?.navigationBar.prefersLargeTitles = true
-        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.font: UIFont(name:Constants.Font.bold, size:18)!]
-        self.navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.font: UIFont(name:Constants.Font.bold, size:30)!]
+        if isSearchResultsMode {
+            title = searchText
+            navigationItem.largeTitleDisplayMode = .never
+        }
+        else {
+            //Navigation Controller
+            self.navigationController?.navigationBar.prefersLargeTitles = true
+            self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.font: UIFont(name:Constants.Font.bold, size:18)!]
+            self.navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.font: UIFont(name:Constants.Font.bold, size:30)!]
+            self.navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: ColorUtils.hexStringToUIColor(hex: Constants.AppPalette.primaryColor)]
+        }
+        
         
         collectionView.delegate = self
         collectionView.dataSource = self
         
+        let columnLayoutHeaderViewHeight = isSearchResultsMode ? 0.0 : 66.0
         let columnLayout = ColumnFlowLayout(
                 cellsPerRow: 2,
                 minimumInteritemSpacing: 10,
                 minimumLineSpacing: 10,
                 sectionInset: UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10),
-                headerReferenceSize: CGSize(width: 0, height: 1)
+                headerReferenceSize: CGSize(width: self.view.frame.width - 600.0, height: columnLayoutHeaderViewHeight)
             )
         
         collectionView?.collectionViewLayout = columnLayout
@@ -65,13 +76,12 @@ class HomeViewController : UIViewController, UICollectionViewDelegate, UICollect
         errorAnimationView.loopMode = .loop
         errorAnimationView.animationSpeed = 0.5
         hideErrorView()
-        
+    
         search()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: ColorUtils.hexStringToUIColor(hex: Constants.AppPalette.primaryColor)]
     }
     
     private func search(){
@@ -121,10 +131,16 @@ class HomeViewController : UIViewController, UICollectionViewDelegate, UICollect
         return cell
     }
     
-    //MARK: - Error View
-    @IBAction func refreshData(_ sender: Any) {
-        search()
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+
+        let headerView: HomeCollectionViewHeaderCell = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "HomeCollectionViewHeaderCell", for: indexPath as IndexPath) as! HomeCollectionViewHeaderCell
+
+        let headerViewHeight = isSearchResultsMode ? 0 : headerView.frame.height
+        headerView.frame = CGRect(x: headerView.frame.origin.y, y: headerView.frame.origin.x, width: self.view.bounds.width, height: headerViewHeight)
+     return headerView
     }
+    
+    //MARK: - Error View
     
     private func showErrorView(message: String) {
         DispatchQueue.main.async {
@@ -157,5 +173,23 @@ class HomeViewController : UIViewController, UICollectionViewDelegate, UICollect
             self.activityIndicatorView.isHidden = true
             self.activityIndicatorView.stopAnimating()
         }
+    }
+   
+    @IBAction func refreshData(_ sender: Any) {
+        search()
+    }
+    
+    // MARK: - Navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+     /*   if  segue.identifier == goToSearchResults,
+            let destination = segue.destination as? HomeViewController,
+            let cell = sender as? HomeCollectionViewCell,
+            let indexPath = self.collectionView.indexPath(for: cell)
+        {
+         //   var photo = photoListVM.photos[selectedIndex]
+            destination.searchText = placeTypes![indexPath.row]
+        }   */
+
     }
 }
