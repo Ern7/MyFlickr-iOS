@@ -74,7 +74,7 @@ class HomeViewController : UIViewController, UICollectionViewDelegate, UICollect
                 minimumInteritemSpacing: 10,
                 minimumLineSpacing: 10,
                 sectionInset: UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10),
-                headerReferenceSize: CGSize(width: self.view.frame.width - 600.0, height: columnLayoutHeaderViewHeight)
+                headerReferenceSize: CGSize(width: self.collectionView.bounds.size.width, height: columnLayoutHeaderViewHeight)
             )
         
         collectionView?.collectionViewLayout = columnLayout
@@ -187,7 +187,7 @@ class HomeViewController : UIViewController, UICollectionViewDelegate, UICollect
             let headerView: HomeCollectionViewHeaderCell = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "HomeCollectionViewHeaderCell", for: indexPath as IndexPath) as! HomeCollectionViewHeaderCell
 
             let headerViewHeight = isSearchResultsMode ? 0 : headerView.frame.height
-            headerView.frame = CGRect(x: headerView.frame.origin.y, y: headerView.frame.origin.x, width: self.view.bounds.width, height: headerViewHeight)
+            headerView.frame = CGRect(x: headerView.frame.origin.x, y: headerView.frame.origin.y, width: self.collectionView.frame.width, height: headerViewHeight)
             return headerView
         }
         return UICollectionReusableView()
