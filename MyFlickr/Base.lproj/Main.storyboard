@@ -33,7 +33,7 @@
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="ecl-zE-dos">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="758"/>
-                                <color key="backgroundColor" red="0.97254901959999995" green="0.97254901959999995" blue="0.97254901959999995" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <color key="backgroundColor" red="0.92156862745098034" green="0.92156862745098034" blue="0.92156862745098034" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="Mou-zO-8oR">
                                     <size key="itemSize" width="128" height="78"/>
                                     <size key="headerReferenceSize" width="50" height="66"/>
@@ -108,6 +108,7 @@
                                             <outlet property="photoImageView" destination="evJ-m3-g75" id="vKn-lW-WmH"/>
                                             <outlet property="titleLabel" destination="zbM-oC-46I" id="p21-1K-knn"/>
                                             <outlet property="titleParentView" destination="fM3-NO-NBC" id="mq6-JT-jmu"/>
+                                            <segue destination="DMP-wz-Mz4" kind="show" identifier="gotoPhotoDetail" id="asA-Sq-TW8"/>
                                         </connections>
                                     </collectionViewCell>
                                 </cells>
@@ -116,11 +117,11 @@
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" id="S3j-l0-jf4">
-                                            <rect key="frame" x="0.0" y="-354" width="414" height="774"/>
+                                            <rect key="frame" x="0.0" y="-354" width="394" height="774"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <subviews>
                                                 <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="r13-OO-w5n">
-                                                    <rect key="frame" x="10" y="364" width="394" height="46"/>
+                                                    <rect key="frame" x="10" y="364" width="374" height="46"/>
                                                     <subviews>
                                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="magnifyingglass" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="Gjk-jf-a7O">
                                                             <rect key="frame" x="10" y="13.5" width="20.5" height="18.5"/>
@@ -149,7 +150,7 @@
                                                     </userDefinedRuntimeAttributes>
                                                 </view>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kfN-It-2Nk">
-                                                    <rect key="frame" x="0.0" y="0.0" width="414" height="774"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="394" height="774"/>
                                                     <state key="normal" title="Button"/>
                                                     <buttonConfiguration key="configuration" style="plain" title=""/>
                                                     <connections>
@@ -253,7 +254,7 @@
                             </activityIndicatorView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
-                        <color key="backgroundColor" red="0.97254901960784312" green="0.97254901960784312" blue="0.97254901960784312" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                        <color key="backgroundColor" red="0.92156862745098034" green="0.92156862745098034" blue="0.92156862745098034" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                         <constraints>
                             <constraint firstItem="SaF-TT-eaz" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="57Y-UR-LV5"/>
                             <constraint firstItem="nG8-mn-LfX" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="AvL-lg-YOD"/>
@@ -343,7 +344,7 @@
                             </tableView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="JUy-DQ-jBT"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <color key="backgroundColor" red="0.92156862745098034" green="0.92156862745098034" blue="0.92156862745098034" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                         <constraints>
                             <constraint firstItem="JUy-DQ-jBT" firstAttribute="bottom" secondItem="rHP-gH-Qh5" secondAttribute="bottom" id="Brg-Hf-JEo"/>
                             <constraint firstItem="JUy-DQ-jBT" firstAttribute="trailing" secondItem="rHP-gH-Qh5" secondAttribute="trailing" id="Dvl-yf-N6U"/>
@@ -379,6 +380,36 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="XJ6-JK-GD5" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="113.04347826086958" y="37.5"/>
+        </scene>
+        <!--Photo Detail View Controller-->
+        <scene sceneID="zaz-2D-FjM">
+            <objects>
+                <viewController id="DMP-wz-Mz4" customClass="PhotoDetailViewController" customModule="MyFlickr" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="ull-nS-dLd">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Ubd-GK-LmJ">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="808"/>
+                            </imageView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="LEy-DD-YYo"/>
+                        <color key="backgroundColor" red="0.92156862745098034" green="0.92156862745098034" blue="0.92156862745098034" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                        <constraints>
+                            <constraint firstItem="LEy-DD-YYo" firstAttribute="trailing" secondItem="Ubd-GK-LmJ" secondAttribute="trailing" id="EFd-5y-zF1"/>
+                            <constraint firstItem="LEy-DD-YYo" firstAttribute="bottom" secondItem="Ubd-GK-LmJ" secondAttribute="bottom" id="F8q-Ro-7uk"/>
+                            <constraint firstItem="Ubd-GK-LmJ" firstAttribute="leading" secondItem="LEy-DD-YYo" secondAttribute="leading" id="NlF-Or-Hjh"/>
+                            <constraint firstItem="Ubd-GK-LmJ" firstAttribute="top" secondItem="LEy-DD-YYo" secondAttribute="top" id="UZE-mY-ZqX"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="fWc-k9-Ubq"/>
+                    <connections>
+                        <outlet property="photoImageView" destination="Ubd-GK-LmJ" id="8Zn-qf-wBu"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="bZO-vL-9Ry" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1023" y="-716"/>
         </scene>
     </scenes>
     <designables>

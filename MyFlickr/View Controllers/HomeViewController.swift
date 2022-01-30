@@ -45,6 +45,8 @@ class HomeViewController : UIViewController, UICollectionViewDelegate, UICollect
     var observers: [AnyCancellable] = []
     var isLoadingMoreCancellable : AnyCancellable?
     
+    //Segues
+    let gotoPhotoDetail = "gotoPhotoDetail"
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -165,15 +167,15 @@ class HomeViewController : UIViewController, UICollectionViewDelegate, UICollect
             fatalError("HomeCollectionViewCell not found")
         }
         
-        let photoTypeVM = self.photoListVM.photoAtIndex(indexPath.row)
-        let url = URL(string: photoTypeVM.photoUrl)
+        let photoVM = self.photoListVM.photoAtIndex(indexPath.row)
+        let url = URL(string: photoVM.photoUrl)
         cell.photoImageView.kf.setImage(with: url)
         
-        if photoTypeVM.title.isEmpty {
+        if photoVM.title.isEmpty {
             cell.titleParentView.isHidden = true
         }
         else {
-            cell.titleLabel.text = photoTypeVM.title
+            cell.titleLabel.text = photoVM.title
             cell.titleParentView.isHidden = false
         }
         return cell
@@ -240,14 +242,13 @@ class HomeViewController : UIViewController, UICollectionViewDelegate, UICollect
     // MARK: - Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
-     /*   if  segue.identifier == goToSearchResults,
-            let destination = segue.destination as? HomeViewController,
+        if  segue.identifier == gotoPhotoDetail,
+            let destination = segue.destination as? PhotoDetailViewController,
             let cell = sender as? HomeCollectionViewCell,
             let indexPath = self.collectionView.indexPath(for: cell)
         {
-         //   var photo = photoListVM.photos[selectedIndex]
-            destination.searchText = placeTypes![indexPath.row]
-        }   */
+            destination.photoVM = photoListVM.photoAtIndex(indexPath.row)
+        }
 
     }
 }
