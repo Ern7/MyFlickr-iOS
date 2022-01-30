@@ -20,8 +20,12 @@ class HomeViewController : UIViewController, UICollectionViewDelegate, UICollect
     @IBOutlet weak var errorRefreshButton: UIButton!
     @IBOutlet weak var errorAnimationView: AnimationView!
     @IBOutlet weak var activityIndicatorView: UIActivityIndicatorView!
+    @IBOutlet weak var loadMoreViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var loadMorectivityIndicatorView: UIActivityIndicatorView!
     
+    //States
     var isSearchResultsMode = false
+    @Published var isLoadingMore = false
     
     //collectionView configs
     let inset: CGFloat = 10
@@ -39,10 +43,12 @@ class HomeViewController : UIViewController, UICollectionViewDelegate, UICollect
     
     //OBSERVERS
     var observers: [AnyCancellable] = []
+    var isLoadingMoreCancellable : AnyCancellable?
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        loadMoreViewHeightConstraint.constant = 0.0
         
         if isSearchResultsMode {
             title = searchText
@@ -76,6 +82,20 @@ class HomeViewController : UIViewController, UICollectionViewDelegate, UICollect
         errorAnimationView.loopMode = .loop
         errorAnimationView.animationSpeed = 0.5
         hideErrorView()
+        
+        isLoadingMoreCancellable = self.$isLoadingMore
+            .sink() {
+                if $0 {
+                    self.loadMoreViewHeightConstraint.constant = 50.0
+                    self.loadMorectivityIndicatorView.startAnimating()
+                    self.loadMorectivityIndicatorView.isHidden = false
+                }
+                else {
+                    self.loadMoreViewHeightConstraint.constant = 0.0
+                    self.loadMorectivityIndicatorView.stopAnimating()
+                    self.loadMorectivityIndicatorView.isHidden = true
+                }
+        }
     
         search()
     }
@@ -84,8 +104,10 @@ class HomeViewController : UIViewController, UICollectionViewDelegate, UICollect
         super.viewWillAppear(animated)
     }
     
+    // MARK: - Data methods
     private func search(){
         showLoader()
+        currentPage = 1
         PhotoListViewModel.search(page: currentPage, perPage: pageSize, text: searchText)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
@@ -102,6 +124,32 @@ class HomeViewController : UIViewController, UICollectionViewDelegate, UICollect
                 self?.photoListVM = PhotoListViewModel(photos: value)
                 self?.collectionView.isHidden = false
                 self?.collectionView.reloadData()
+            }).store(in: &observers)
+    }
+    
+    private func loadMore(){
+        isLoadingMore = true
+        currentPage = currentPage + 1
+        PhotoListViewModel.search(page: currentPage, perPage: pageSize, text: searchText)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .finished:
+                    DebuggingLogger.printData("Load more finished")
+                case .failure(let error):
+                    DebuggingLogger.printData("Load more error: \(error.message)")
+                    self.showErrorView(message: error.message)
+                }
+            }, receiveValue: { [weak self] value in
+                DebuggingLogger.printData("Load more results: \(value)")
+                self?.isLoadingMore = false
+                var photos = [Photo]()
+                photos.append(contentsOf: (self?.photoListVM.photos)!)
+                photos.append(contentsOf: value)
+                self?.photoListVM = PhotoListViewModel(photos: photos)
+                self?.collectionView.isHidden = false
+                self?.collectionView.reloadData()
+                self?.collectionView.collectionViewLayout.invalidateLayout()
             }).store(in: &observers)
     }
     
@@ -133,12 +181,22 @@ class HomeViewController : UIViewController, UICollectionViewDelegate, UICollect
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
 
-        let headerView: HomeCollectionViewHeaderCell = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "HomeCollectionViewHeaderCell", for: indexPath as IndexPath) as! HomeCollectionViewHeaderCell
+        if kind == UICollectionView.elementKindSectionHeader {
+            let headerView: HomeCollectionViewHeaderCell = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "HomeCollectionViewHeaderCell", for: indexPath as IndexPath) as! HomeCollectionViewHeaderCell
 
-        let headerViewHeight = isSearchResultsMode ? 0 : headerView.frame.height
-        headerView.frame = CGRect(x: headerView.frame.origin.y, y: headerView.frame.origin.x, width: self.view.bounds.width, height: headerViewHeight)
-     return headerView
+            let headerViewHeight = isSearchResultsMode ? 0 : headerView.frame.height
+            headerView.frame = CGRect(x: headerView.frame.origin.y, y: headerView.frame.origin.x, width: self.view.bounds.width, height: headerViewHeight)
+            return headerView
+        }
+        return UICollectionReusableView()
     }
+    
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        if indexPath.row == collectionView.numberOfItems(inSection: indexPath.section) - 2 {
+            loadMore()
+        }
+    }
+
     
     //MARK: - Error View
     
