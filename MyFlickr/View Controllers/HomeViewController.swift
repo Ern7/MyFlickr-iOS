@@ -187,7 +187,7 @@ class HomeViewController : UIViewController, UICollectionViewDelegate, UICollect
             let headerView: HomeCollectionViewHeaderCell = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "HomeCollectionViewHeaderCell", for: indexPath as IndexPath) as! HomeCollectionViewHeaderCell
 
             let headerViewHeight = isSearchResultsMode ? 0 : headerView.frame.height
-            headerView.frame = CGRect(x: headerView.frame.origin.x, y: headerView.frame.origin.y, width: self.collectionView.frame.width, height: headerViewHeight)
+            headerView.frame = CGRect(x: headerView.frame.origin.x, y: headerView.frame.origin.y, width: self.view.frame.width, height: headerViewHeight)
             return headerView
         }
         return UICollectionReusableView()

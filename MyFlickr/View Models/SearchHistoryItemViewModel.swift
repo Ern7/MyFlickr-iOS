@@ -37,7 +37,8 @@ extension SearchHistoryItemListViewModel {
             
             let itemsString = userDefaults.string(forKey: Constants.UserDefaultsKeys.SearchHistoryItems)
             let items = convert(stringArray: itemsString!)
-            promixe(.success(items))
+            let reverseditems : [SearchHistoryItem] = items.reversed()
+            promixe(.success(reverseditems))
         }
     }
     
